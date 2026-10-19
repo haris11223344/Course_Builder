@@ -170,7 +170,7 @@ export const DatabaseExplorerPage: React.FC = () => {
 
         <div className="flex flex-wrap items-center gap-2">
           <a
-            href="http://localhost:8000/docs"
+            href="https://course-builder-18y2.onrender.com/docs"
             target="_blank"
             rel="noreferrer"
             className="btn-outline h-9 px-3.5 text-xs flex items-center gap-1.5"
@@ -291,11 +291,10 @@ export const DatabaseExplorerPage: React.FC = () => {
                 <button
                   key={tbl.name}
                   onClick={() => setActiveTable(tbl.name)}
-                  className={`w-full p-2.5 rounded-lg flex items-center justify-between text-xs transition-all cursor-pointer ${
-                    isActive
-                      ? "bg-primary/15 text-primary font-bold border-l-2 border-primary"
-                      : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground"
-                  }`}
+                  className={`w-full p-2.5 rounded-lg flex items-center justify-between text-xs transition-all cursor-pointer ${isActive
+                    ? "bg-primary/15 text-primary font-bold border-l-2 border-primary"
+                    : "text-muted-foreground hover:bg-secondary/60 hover:text-foreground"
+                    }`}
                 >
                   <div className="flex items-center gap-2 truncate">
                     <TableIcon className="w-3.5 h-3.5 shrink-0" />
@@ -372,13 +371,12 @@ export const DatabaseExplorerPage: React.FC = () => {
                         return (
                           <td
                             key={col}
-                            className={`p-3 max-w-[240px] truncate ${
-                              val === null
-                                ? "text-muted-foreground/50 italic"
-                                : col === "id" || col.endsWith("_id")
+                            className={`p-3 max-w-[240px] truncate ${val === null
+                              ? "text-muted-foreground/50 italic"
+                              : col === "id" || col.endsWith("_id")
                                 ? "text-primary"
                                 : "text-foreground"
-                            }`}
+                              }`}
                             title={displayStr}
                           >
                             {displayStr}
