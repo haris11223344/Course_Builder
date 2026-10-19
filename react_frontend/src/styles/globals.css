@@ -1,0 +1,280 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root,
+  html.light,
+  html[data-theme="light"],
+  body.light {
+    /* ===== LIGHT MODE (ALPINE SAGE & CELADON GREEN THEME) ===== */
+    /* Handcrafted, earthy, bespoke greens - NOT stark generic white */
+    --background: 145 28% 95%;          /* Soft sage/mint mist #eef6f1 */
+    --foreground: 155 55% 10%;          /* Deepest forest pine text #0b2416 */
+    --card: 145 30% 98%;                /* Pale celadon card surface #f6faf7 */
+    --card-foreground: 155 55% 10%;
+    --popover: 145 30% 98%;
+    --popover-foreground: 155 55% 10%;
+
+    --primary: 158 75% 36%;             /* Rich emerald green #16a36b */
+    --primary-foreground: 145 30% 98%;  /* Pale mint */
+    --primary-glow: 158 84% 45%;        /* Vibrant neon canopy */
+    --primary-50: 145 35% 95%;
+    --primary-100: 145 35% 90%;
+    --primary-500: 158 75% 36%;
+    --primary-600: 158 78% 30%;
+    --primary-700: 158 80% 24%;
+    --primary-800: 160 70% 18%;
+    --primary-900: 160 65% 13%;
+    --primary-950: 160 60% 8%;
+
+    --secondary: 145 22% 89%;           /* Muted sage tint */
+    --secondary-foreground: 155 50% 15%;
+
+    --accent: 78 85% 36%;               /* Olive chartreuse accent #65a30d */
+    --accent-foreground: 145 30% 98%;
+
+    --muted: 145 18% 88%;
+    --muted-foreground: 152 25% 38%;    /* Forest moss grey-green */
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 148 20% 82%;              /* Sage-tinted borders */
+    --input: 148 20% 82%;
+    --ring: 158 75% 36%;
+
+    --radius: 0.75rem;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(158 75% 36%) 0%, hsl(172 75% 35%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(145 28% 95%) 0%, hsl(152 35% 88%) 50%, hsl(145 28% 95%) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(158 75% 36%) 0%, hsl(78 85% 36%) 100%);
+    --gradient-surface: linear-gradient(180deg, hsl(145 30% 98%) 0%, hsl(145 22% 92%) 100%);
+    --gradient-glow: radial-gradient(ellipse 80% 50% at 50% -20%, hsl(158 84% 45% / 0.15), transparent);
+    --gradient-mesh: conic-gradient(from 180deg at 50% 50%, hsl(158 30% 85%), hsl(145 25% 92%), hsl(155 35% 88%), hsl(158 30% 85%));
+
+    /* Shadows */
+    --shadow-glow: 0 0 20px -5px hsl(158 75% 36% / 0.25);
+    --shadow-glow-lg: 0 0 40px -10px hsl(158 75% 36% / 0.35);
+    --shadow-glow-xl: 0 0 60px -15px hsl(158 75% 36% / 0.45);
+    --shadow-glow-inner: inset 0 0 20px -5px hsl(158 75% 36% / 0.15);
+    --shadow-card: 0 4px 20px -5px hsl(155 50% 10% / 0.08);
+    --shadow-card-hover: 0 12px 35px -10px hsl(155 50% 10% / 0.14), 0 0 25px -5px hsl(158 75% 36% / 0.2);
+    --shadow-glass: 0 8px 32px -5px hsl(155 50% 10% / 0.07);
+  }
+
+  html.dark,
+  .dark,
+  html[data-theme="dark"],
+  body.dark {
+    /* ===== DARK MODE (DEEP NORDIC FOREST & NEON CANOPY) ===== */
+    /* Layered organic greens: deep pine, alpine moss, dark jade, emerald */
+    --background: 152 48% 6%;           /* Deepest pine black-green #08160f */
+    --foreground: 145 35% 95%;          /* Pale luminous celadon #eef8f2 */
+    --card: 152 40% 10%;                /* Dark woodland moss card #0f241a */
+    --card-foreground: 145 35% 95%;
+    --popover: 152 44% 8%;              /* Elevated forest surface #0c1e15 */
+    --popover-foreground: 145 35% 95%;
+
+    --primary: 158 82% 46%;             /* High-voltage emerald canopy #15d68d */
+    --primary-foreground: 152 55% 6%;   /* Dark pine contrast text */
+    --primary-glow: 156 95% 56%;        /* Neon glow */
+    --primary-50: 150 30% 96%;
+    --primary-100: 150 30% 90%;
+    --primary-500: 158 82% 46%;
+    --primary-600: 158 82% 38%;
+    --primary-700: 158 75% 30%;
+    --primary-800: 160 65% 22%;
+    --primary-900: 160 60% 15%;
+    --primary-950: 152 48% 6%;
+
+    --secondary: 152 32% 15%;           /* Forest slate #1a3326 */
+    --secondary-foreground: 145 30% 90%;
+
+    --accent: 78 85% 55%;               /* Chartreuse neon leaf accent #a3e635 */
+    --accent-foreground: 152 55% 6%;
+
+    --muted: 152 28% 13%;
+    --muted-foreground: 148 18% 65%;    /* Soft lichen/sage text */
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 152 28% 19%;              /* Dark pine borders #223f30 */
+    --input: 152 28% 19%;
+    --ring: 158 82% 46%;
+
+    /* Gradients (DARK OVERRIDES) */
+    --gradient-primary: linear-gradient(135deg, hsl(158 82% 46%) 0%, hsl(172 80% 48%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(152 48% 6%) 0%, hsl(154 45% 10%) 50%, hsl(152 48% 6%) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(158 82% 46%) 0%, hsl(78 85% 55%) 100%);
+    --gradient-surface: linear-gradient(180deg, hsl(152 40% 10%) 0%, hsl(152 35% 7%) 100%);
+    --gradient-glow: radial-gradient(ellipse 80% 50% at 50% -20%, hsl(156 95% 56% / 0.25), transparent);
+    --gradient-mesh: conic-gradient(from 180deg at 50% 50%, hsl(158 75% 14%), hsl(152 40% 10%), hsl(165 45% 12%), hsl(158 75% 14%));
+
+    /* Shadows (DARK OVERRIDES) */
+    --shadow-glow: 0 0 25px -4px hsl(156 95% 56% / 0.45);
+    --shadow-glow-lg: 0 0 45px -8px hsl(156 95% 56% / 0.55);
+    --shadow-glow-xl: 0 0 75px -12px hsl(156 95% 56% / 0.65);
+    --shadow-glow-inner: inset 0 0 20px -5px hsl(156 95% 56% / 0.25);
+    --shadow-card: 0 6px 28px -5px hsl(152 50% 3% / 0.75);
+    --shadow-card-hover: 0 16px 45px -10px hsl(152 50% 3% / 0.85), 0 0 35px -8px hsl(158 82% 46% / 0.35);
+    --shadow-glass: 0 8px 32px -5px hsl(152 50% 3% / 0.6);
+  }
+}
+
+@layer base {
+  * { @apply border-border; }
+  
+  html {
+    font-size: 17px;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    @apply bg-background text-foreground antialiased transition-colors duration-300;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  /* Bold Main Headings & Titles in Inter with Increased Scale */
+  h1, h2, h3, h4, h5, h6, .font-display, .card-title, [class*="font-display"] {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+  }
+  h1 {
+    font-size: 2.35rem;
+    font-weight: 800;
+    letter-spacing: -0.035em;
+    line-height: 1.2;
+  }
+  h2 {
+    font-size: 1.75rem;
+    font-weight: 750;
+    letter-spacing: -0.025em;
+    line-height: 1.25;
+  }
+  h3 {
+    font-size: 1.35rem;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+  h4 {
+    font-size: 1.15rem;
+    font-weight: 650;
+  }
+
+  /* Boost any previously tiny micro-text (10px/11px) to a comfortable, readable size */
+  [class*="text-\[10px\]"],
+  [class*="text-\[11px\]"] {
+    font-size: 0.82rem !important;
+    line-height: 1.25rem !important;
+  }
+  
+  /* Focus Visible - BRAND GREEN RING */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
+  
+  /* Selection Color */
+  ::selection { @apply bg-primary/30 text-primary-foreground; }
+  ::-moz-selection { @apply bg-primary/30 text-primary-foreground; }
+}
+
+@layer components {
+  /* ===== GLASSMORPHISM UTILITIES ===== */
+  .glass {
+    @apply bg-card/75 backdrop-blur-md border border-border/60 shadow-glass;
+  }
+  .glass-strong {
+    @apply bg-card/90 backdrop-blur-lg border border-primary/25 shadow-glass;
+  }
+  .glass-card {
+    @apply glass transition-all duration-300 hover:shadow-card-hover hover:border-primary/40 hover:bg-card/90;
+  }
+  
+  /* ===== GLOW UTILITIES ===== */
+  .glow { box-shadow: var(--shadow-glow); }
+  .glow-lg { box-shadow: var(--shadow-glow-lg); }
+  .glow-xl { box-shadow: var(--shadow-glow-xl); }
+  .glow-inner { box-shadow: var(--shadow-glow-inner); }
+  .text-glow { text-shadow: 0 0 20px hsl(var(--primary-glow) / 0.6); }
+
+  /* ===== BUTTON VARIANTS ===== */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-5 py-2.5 text-sm font-semibold text-primary-foreground 
+           bg-gradient-to-r from-primary to-[hsl(172_80%_40%)] 
+           shadow-glow transition-all duration-200 
+           hover:shadow-glow-lg hover:scale-[1.02] active:scale-[0.98] 
+           focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background
+           disabled:opacity-50 disabled:pointer-events-none disabled:hover:scale-100 cursor-pointer;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-foreground
+           bg-transparent hover:bg-secondary hover:text-foreground
+           transition-colors duration-200 cursor-pointer
+           focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+  }
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-foreground
+           border border-border bg-transparent
+           hover:bg-secondary hover:border-primary/50 hover:text-primary
+           transition-all duration-200 cursor-pointer
+           focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+  }
+  .btn-destructive {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold text-destructive-foreground
+           bg-destructive hover:bg-destructive/90 shadow-glow-inner
+           transition-all duration-200 cursor-pointer
+           focus-visible:ring-2 focus-visible:ring-destructive focus-visible:ring-offset-2;
+  }
+
+  /* ===== INPUT STYLING ===== */
+  .input-field {
+    @apply w-full rounded-lg border border-input bg-card/60 px-4 py-2.5 text-sm text-foreground
+           placeholder:text-muted-foreground
+           transition-all duration-200
+           hover:border-primary/50
+           focus:border-ring focus:ring-2 focus:ring-ring/25 focus:outline-none
+           disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .label-text { @apply block text-sm font-medium text-foreground mb-1.5; }
+
+  /* ===== CARD LAYOUT ===== */
+  .card-base { @apply glass-card rounded-xl p-6; }
+  .card-header { @apply mb-4; }
+  .card-title { @apply text-lg font-semibold text-card-foreground tracking-tight; }
+  .card-description { @apply text-sm text-muted-foreground mt-1; }
+
+  /* ===== SCROLLBAR (Green Tint) ===== */
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { @apply bg-transparent; }
+  ::-webkit-scrollbar-thumb { @apply bg-border/60 rounded-full hover:bg-primary/40; }
+  ::-webkit-scrollbar-thumb:hover { @apply bg-primary/70; }
+  ::-webkit-scrollbar-corner { @apply bg-transparent; }
+}
+
+@layer utilities {
+  /* Text Gradient */
+  .text-gradient-primary { @apply bg-gradient-primary bg-clip-text text-transparent; }
+  .text-gradient-hero { @apply bg-gradient-to-r from-primary via-[hsl(156_95%_56%)] to-[hsl(78_85%_55%)] bg-clip-text text-transparent; }
+  
+  /* Animation Helpers */
+  .animate-in { animation: fade-in 0.3s ease-out, slide-up 0.4s ease-out; }
+  .animate-out { animation: fade-out 0.2s ease-in, slide-down 0.2s ease-in; }
+  
+  /* Hide Scrollbar */
+  .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
