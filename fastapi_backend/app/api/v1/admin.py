@@ -236,7 +236,7 @@ async def bootstrap_admin(
     # Find your account
     result = await db.execute(
         select(User).where(
-            User.email == "haris13ckmnss@gmail.com"
+            User.email == "deenasumesh81@gmail.com"
         )
     )
 
