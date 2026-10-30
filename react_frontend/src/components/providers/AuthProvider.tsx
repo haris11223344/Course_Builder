@@ -8,6 +8,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   login: (data: any) => Promise<User>;
   register: (data: any) => Promise<User>;
+  loginWithGoogle: (data?: any) => Promise<User>;
   logout: () => Promise<void>;
   updateUser: (updated: Partial<User>) => void;
   refetchUser: () => Promise<void>;
@@ -36,6 +37,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = async (credentials: { email: string; password: string }): Promise<User> => {
     const response = await api.post("/auth/login", credentials);
+    if (response.data.access_token) {
+      localStorage.setItem("cf_token", response.data.access_token);
+    }
+    if (response.data.refresh_token) {
+      localStorage.setItem("cf_refresh_token", response.data.refresh_token);
+    }
     const loggedUser = response.data.user;
     setUser(loggedUser);
     return loggedUser;
@@ -43,15 +50,38 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const register = async (credentials: { email: string; password: string; full_name?: string }): Promise<User> => {
     const response = await api.post("/auth/register", credentials);
+    if (response.data.access_token) {
+      localStorage.setItem("cf_token", response.data.access_token);
+    }
+    if (response.data.refresh_token) {
+      localStorage.setItem("cf_refresh_token", response.data.refresh_token);
+    }
     const registeredUser = response.data.user;
     setUser(registeredUser);
     return registeredUser;
   };
 
+  const loginWithGoogle = async (data?: any): Promise<User> => {
+    const response = await api.post("/auth/google", data || {});
+    if (response.data.access_token) {
+      localStorage.setItem("cf_token", response.data.access_token);
+    }
+    if (response.data.refresh_token) {
+      localStorage.setItem("cf_refresh_token", response.data.refresh_token);
+    }
+    const loggedUser = response.data.user;
+    setUser(loggedUser);
+    return loggedUser;
+  };
+
   const logout = async () => {
     try {
       await api.post("/auth/logout");
+    } catch {
+      // Ignore network errors on logout
     } finally {
+      localStorage.removeItem("cf_token");
+      localStorage.removeItem("cf_refresh_token");
       setUser(null);
       window.location.href = "/auth/login";
     }
@@ -71,6 +101,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         isAuthenticated: !!user,
         login,
         register,
+        loginWithGoogle,
         logout,
         updateUser,
         refetchUser: fetchCurrentUser,

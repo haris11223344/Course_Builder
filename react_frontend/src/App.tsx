@@ -7,6 +7,8 @@ import { PageTransition } from "@/components/layout/PageTransition";
 import { LandingPage } from "@/routes/index";
 import { LoginPage } from "@/routes/auth/login";
 import { RegisterPage } from "@/routes/auth/register";
+import { ForgotPasswordPage } from "@/routes/auth/forgot-password";
+import { ResetPasswordPage } from "@/routes/auth/reset-password";
 import { OnboardingPage } from "@/routes/auth/onboarding";
 import { DashboardPage } from "@/routes/dashboard";
 import { CourseBuilderPage } from "@/routes/builder/index";
@@ -50,6 +52,22 @@ const AnimatedAppRoutes: React.FC = () => {
               element={
                 <PageTransition>
                   <RegisterPage />
+                </PageTransition>
+              }
+            />
+            <Route
+              path="/auth/forgot-password"
+              element={
+                <PageTransition>
+                  <ForgotPasswordPage />
+                </PageTransition>
+              }
+            />
+            <Route
+              path="/auth/reset-password"
+              element={
+                <PageTransition>
+                  <ResetPasswordPage />
                 </PageTransition>
               }
             />

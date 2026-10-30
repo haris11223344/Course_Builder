@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { FloatingOrbs } from "@/components/background/FloatingOrbs";
+import { GoogleAuthButton } from "@/components/auth/GoogleAuthButton";
 import { Lock, Mail, ArrowRight, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 
@@ -60,7 +61,17 @@ export const LoginPage: React.FC = () => {
           </p>
         </div>
 
-        <div className="card-base p-8 shadow-glow">
+        <div className="card-base p-8 shadow-glow space-y-5">
+          {/* Sign In with Google Option */}
+          <GoogleAuthButton label="Sign in with Google" />
+
+          <div className="relative flex items-center justify-center">
+            <div className="border-t border-border/60 w-full" />
+            <span className="bg-card px-3 text-[11px] text-muted-foreground uppercase tracking-wider relative shrink-0">
+              or sign in with email
+            </span>
+          </div>
+
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="space-y-1">
               <Label htmlFor="email">Email Address</Label>
@@ -81,9 +92,9 @@ export const LoginPage: React.FC = () => {
             <div className="space-y-1">
               <div className="flex items-center justify-between">
                 <Label htmlFor="password">Password</Label>
-                <a href="#" className="text-[11px] text-primary hover:underline">
+                <Link to="/auth/forgot-password" className="text-[11px] text-primary hover:underline">
                   Forgot?
-                </a>
+                </Link>
               </div>
               <Input
                 id="password"

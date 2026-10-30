@@ -1,4 +1,4 @@
-export const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+export const API_BASE_URL = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? "" : "http://localhost:8000");
 
 export const DIFFICULTY_OPTIONS = [
   { value: "beginner", label: "Beginner", description: "Zero to foundational concepts" },
