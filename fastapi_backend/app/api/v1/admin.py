@@ -1,24 +1,51 @@
+```python
 import os
-from fastapi import APIRouter, Depends, HTTPException, Query
+
+from fastapi import APIRouter, Depends, HTTPException, Query, Header
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func, text
+
 from app.core.database import get_db
-from app.models import User, Course, Resource, UserProgress
+from app.core.config import settings
+from app.models import User, UserRole, Course, Resource, UserProgress
 from app.api.deps import get_current_admin
 
-router = APIRouter(prefix="/admin", tags=["Admin & Database Explorer"])
+
+router = APIRouter(
+    prefix="/admin",
+    tags=["Admin & Database Explorer"]
+)
+
 
 @router.get("/metrics")
 async def get_system_metrics(
     admin_user: User = Depends(get_current_admin),
     db: AsyncSession = Depends(get_db)
 ):
-    users_count = (await db.execute(select(func.count(User.id)))).scalar() or 0
-    courses_count = (await db.execute(select(func.count(Course.id)))).scalar() or 0
-    resources_count = (await db.execute(select(func.count(Resource.id)))).scalar() or 0
-    completions_count = (await db.execute(
-        select(func.count(UserProgress.id)).where(UserProgress.status == "completed")
-    )).scalar() or 0
+    users_count = (
+        await db.execute(
+            select(func.count(User.id))
+        )
+    ).scalar() or 0
+
+    courses_count = (
+        await db.execute(
+            select(func.count(Course.id))
+        )
+    ).scalar() or 0
+
+    resources_count = (
+        await db.execute(
+            select(func.count(Resource.id))
+        )
+    ).scalar() or 0
+
+    completions_count = (
+        await db.execute(
+            select(func.count(UserProgress.id))
+            .where(UserProgress.status == "completed")
+        )
+    ).scalar() or 0
 
     return {
         "total_users": users_count,
@@ -28,44 +55,79 @@ async def get_system_metrics(
         "system_status": "healthy"
     }
 
+
 @router.get("/database/overview")
 async def get_database_overview(
     admin_user: User = Depends(get_current_admin),
     db: AsyncSession = Depends(get_db)
 ):
     """Inspect all database tables, row counts, and storage stats (Admin Only)."""
+
     try:
-        # SQLite or MySQL table list
-        res = await db.execute(text("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'"))
+        # SQLite table list
+        res = await db.execute(
+            text(
+                "SELECT name FROM sqlite_master "
+                "WHERE type='table' AND name NOT LIKE 'sqlite_%'"
+            )
+        )
+
         table_names = [row[0] for row in res.fetchall()]
+
     except Exception:
-        # Fallback for MySQL if running on MySQL
+        # Fallback for MySQL
         try:
-            res = await db.execute(text("SHOW TABLES"))
+            res = await db.execute(
+                text("SHOW TABLES")
+            )
+
             table_names = [row[0] for row in res.fetchall()]
-        except Exception as e:
-            table_names = ["users", "courses", "modules", "lessons", "resources", "user_progress"]
+
+        except Exception:
+            table_names = [
+                "users",
+                "courses",
+                "modules",
+                "lessons",
+                "resources",
+                "user_progress"
+            ]
 
     tables_info = []
-    for t in table_names:
+
+    for table_name in table_names:
         try:
-            cnt_res = await db.execute(text(f"SELECT COUNT(*) FROM {t}"))
+            cnt_res = await db.execute(
+                text(f"SELECT COUNT(*) FROM {table_name}")
+            )
+
             count = cnt_res.scalar() or 0
-            tables_info.append({"name": t, "count": count})
+
+            tables_info.append({
+                "name": table_name,
+                "count": count
+            })
+
         except Exception:
             pass
 
     db_path = os.path.abspath("courseforge.db")
-    file_size_bytes = os.path.getsize(db_path) if os.path.exists(db_path) else 0
+
+    file_size_bytes = (
+        os.path.getsize(db_path)
+        if os.path.exists(db_path)
+        else 0
+    )
 
     return {
         "status": "connected",
         "database_type": "SQLite 3.x / SQLAlchemy 2.0 Async",
         "file_path": db_path,
         "file_size_kb": round(file_size_bytes / 1024, 2),
-        "swagger_url": "http://localhost:8000/docs",
+        "swagger_url": "https://course-builder-18y2.onrender.com/docs",
         "tables": tables_info
     }
+
 
 @router.get("/database/table/{table_name}")
 async def inspect_table_data(
@@ -76,28 +138,62 @@ async def inspect_table_data(
     db: AsyncSession = Depends(get_db)
 ):
     """View records and column data for any database table."""
-    allowed_tables = {"users", "courses", "modules", "lessons", "resources", "user_progress", "refresh_tokens", "saved_resources"}
+
+    allowed_tables = {
+        "users",
+        "courses",
+        "modules",
+        "lessons",
+        "resources",
+        "user_progress",
+        "refresh_tokens",
+        "saved_resources"
+    }
+
     if table_name not in allowed_tables:
-        raise HTTPException(status_code=400, detail=f"Invalid table '{table_name}'. Allowed: {sorted(allowed_tables)}")
+        raise HTTPException(
+            status_code=400,
+            detail=(
+                f"Invalid table '{table_name}'. "
+                f"Allowed: {sorted(allowed_tables)}"
+            )
+        )
 
     offset = (page - 1) * limit
+
     try:
-        # Get count
-        cnt_res = await db.execute(text(f"SELECT COUNT(*) FROM {table_name}"))
+        # Get total record count
+        cnt_res = await db.execute(
+            text(f"SELECT COUNT(*) FROM {table_name}")
+        )
+
         total = cnt_res.scalar() or 0
 
         # Fetch rows
-        query_res = await db.execute(text(f"SELECT * FROM {table_name} LIMIT :limit OFFSET :offset"), {"limit": limit, "offset": offset})
+        query_res = await db.execute(
+            text(
+                f"SELECT * FROM {table_name} "
+                "LIMIT :limit OFFSET :offset"
+            ),
+            {
+                "limit": limit,
+                "offset": offset
+            }
+        )
+
         columns = list(query_res.keys())
         raw_rows = query_res.fetchall()
 
         rows = []
-        for r in raw_rows:
-            d = dict(zip(columns, r))
-            # Redact security sensitive fields
-            if "password_hash" in d and d["password_hash"]:
-                d["password_hash"] = "[REDACTED_BCRYPT_HASH]"
-            rows.append(d)
+
+        for row in raw_rows:
+            data = dict(zip(columns, row))
+
+            # Redact sensitive password information
+            if "hashed_password" in data and data["hashed_password"]:
+                data["hashed_password"] = "[REDACTED]"
+
+            rows.append(data)
 
         return {
             "table": table_name,
@@ -107,6 +203,49 @@ async def inspect_table_data(
             "limit": limit,
             "records": rows
         }
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to query table {table_name}: {str(e)}")
 
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to query table {table_name}: {str(e)}"
+        )
+
+
+@router.post("/bootstrap-admin")
+async def bootstrap_admin(
+    db: AsyncSession = Depends(get_db),
+    bootstrap_key: str = Header(...)
+):
+    """Temporarily promote the configured user to ADMIN."""
+
+    if bootstrap_key != settings.ADMIN_BOOTSTRAP_KEY:
+        raise HTTPException(
+            status_code=403,
+            detail="Invalid bootstrap key"
+        )
+
+    result = await db.execute(
+        select(User).where(
+            User.email == "YOUR_EMAIL_HERE"
+        )
+    )
+
+    user = result.scalar_one_or_none()
+
+    if not user:
+        raise HTTPException(
+            status_code=404,
+            detail="User not found"
+        )
+
+    user.role = UserRole.ADMIN
+
+    await db.commit()
+    await db.refresh(user)
+
+    return {
+        "message": "User promoted to admin",
+        "email": user.email,
+        "role": user.role.value
+    }
+```
