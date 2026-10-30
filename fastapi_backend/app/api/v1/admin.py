@@ -1,4 +1,4 @@
-```python
+
 import os
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Header
@@ -6,7 +6,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, func, text
 
 from app.core.database import get_db
-from app.core.config import settings
 from app.models import User, UserRole, Course, Resource, UserProgress
 from app.api.deps import get_current_admin
 
@@ -61,7 +60,7 @@ async def get_database_overview(
     admin_user: User = Depends(get_current_admin),
     db: AsyncSession = Depends(get_db)
 ):
-    """Inspect all database tables, row counts, and storage stats (Admin Only)."""
+    """Inspect all database tables, row counts, and storage stats."""
 
     try:
         # SQLite table list
@@ -213,17 +212,28 @@ async def inspect_table_data(
 
 @router.post("/bootstrap-admin")
 async def bootstrap_admin(
-    db: AsyncSession = Depends(get_db),
-    bootstrap_key: str = Header(...)
+    bootstrap_key: str = Header(..., alias="bootstrap-key"),
+    db: AsyncSession = Depends(get_db)
 ):
     """Temporarily promote the configured user to ADMIN."""
 
-    if bootstrap_key != settings.ADMIN_BOOTSTRAP_KEY:
+    # Get the secret from the environment variable
+    admin_bootstrap_key = os.getenv("ADMIN_BOOTSTRAP_KEY")
+
+    if not admin_bootstrap_key:
+        raise HTTPException(
+            status_code=500,
+            detail="ADMIN_BOOTSTRAP_KEY is not configured."
+        )
+
+    # Check the provided header against the Render environment variable
+    if bootstrap_key != admin_bootstrap_key:
         raise HTTPException(
             status_code=403,
             detail="Invalid bootstrap key"
         )
 
+    # Find your account
     result = await db.execute(
         select(User).where(
             User.email == "YOUR_EMAIL_HERE"
@@ -238,6 +248,7 @@ async def bootstrap_admin(
             detail="User not found"
         )
 
+    # Promote the user to ADMIN
     user.role = UserRole.ADMIN
 
     await db.commit()
@@ -248,4 +259,3 @@ async def bootstrap_admin(
         "email": user.email,
         "role": user.role.value
     }
-```
